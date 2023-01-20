@@ -24,9 +24,10 @@ for t=1:maxt
     end
     
     %% ddelta/dt
-    %     fx = tanh(W2*abs(x(i,t) - x(i,t)'));
-    %     deltas(1,t+1) = {deltas{1,t} + dt * (-deltas{1,t}/tau + fx/tau)};
-    deltas(1,t+1) = {delta0};
+         fx = tanh(W2*abs(x(:,t) - x(:,t)'));
+         %keyboard;
+         deltas(1,t+1) = {deltas{1,t} + dt * (-deltas{1,t}/tau + fx/tau)};
+    %deltas(1,t+1) = {delta0};
 end
 
 end
