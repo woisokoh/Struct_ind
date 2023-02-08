@@ -1,4 +1,4 @@
-function [x,deltas] = opi_dyn(maxt,Na,W1,W2,u,tau,d,b,beta,x0,delta0,sigma)
+function [x,deltas] = opi_dyn(maxt,Na,W1,W2,u,tau,d,b,alpha,x0,delta0,sigma)
 
 deltas=cell([1,maxt+1]);
 x=zeros(Na,maxt+1);
@@ -10,7 +10,7 @@ for t=1:maxt
     % dx/dt
     for i = 1:Na
         DaDo = 0;
-        SaDo = beta(i,1) * x(i,t);
+        SaDo = alpha(i,1) * x(i,t);
         for k = 1:Na
             if k ~= i
                 del = deltas{1,t};
@@ -24,9 +24,10 @@ for t=1:maxt
     end
     
     %% ddelta/dt
-    %     fx = tanh(W2*abs(x(i,t) - x(i,t)'));
-    %     deltas(1,t+1) = {deltas{1,t} + dt * (-deltas{1,t}/tau + fx/tau)};
-    deltas(1,t+1) = {delta0};
+         fx = tanh(W2*abs(x(:,t) - x(:,t)'));
+         %keyboard;
+         deltas(1,t+1) = {deltas{1,t} + dt * (-deltas{1,t}/tau + fx/tau)};
+    %deltas(1,t+1) = {delta0};
 end
 
 end
