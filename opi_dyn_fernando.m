@@ -8,7 +8,7 @@ deltas(1,1) = {delta0};
 
 for t=1:maxt
     rand_ord = randperm(Na);
-%     temp_delta = deltas{1,t};
+    temp_delta = deltas{1,t};
     
     % calculate similarity
     Nij = (temp_delta * temp_delta.*(1-eye(Na))).^eta;
@@ -18,8 +18,9 @@ for t=1:maxt
     for j = 1:Na 
         % update network of agent rand_ord(i)
         % break an existing link and % add a new link
-        if sum(temp_delta(rand_ord(j),:))>2
-            break_indices = find(temp_delta(rand_ord(j),:)>0);
+        if sum(temp_delta(rand_ord(j),:))>=2
+            count_link = sum(temp_delta);
+            break_indices = find(temp_delta(rand_ord(j),:)>0 & count_link >= 2);
             break_link = break_indices(randperm(length(break_indices),1));
             
             % add a link - choose unconnected nodes & randomly choose 
