@@ -53,20 +53,14 @@ histogram(sum(cell2mat(deltas(end))));
 title('Final Degree Distribution');
 
 %% unpack delta cell structure, comment out for speed
-edges = 0:75; % need to adjust manually
-degree_dist = zeros(length(edges)-1,maxt+1);
+edges = 1:75; % need to adjust manually
 for i = 1:(maxt+1)
-    h = histogram(sum(cell2mat(deltas(i))),edges,'Normalization','probability');
-    degree_dist(:,i) = h.Values';
+    h = histogram(cell2mat(deltas(i)),edges);
+    
 end
-figure;
-imagesc(degree_dist);
-set(gca,'YDir','normal')
-colormap(jetwhite);
-colorbar;
-caxis([0 1]);
-xlabel('Time');
-ylabel('Edges');
+
+
+
 
 
 
