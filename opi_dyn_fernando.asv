@@ -1,4 +1,4 @@
-function [x,deltas] = opi_dyn_fernando(maxt,Na,x0,gamma,eta,sigma,sigma_ND,W1,u,b,alpha,delta0)
+function [x,deltas] = opi_dyn_fernando(maxt,Na,x0,gamma,eta,sigma,W1,u,b,alpha,delta0)
 
 deltas=cell([1,maxt+1]);
 x=zeros(Na,maxt+1);
@@ -10,10 +10,10 @@ for t=1:maxt
     rand_ord = randperm(Na);
     temp_delta = deltas{1,t};
     
-    epsilon = sigma_ND*rand();
+    epsilon = rand();
     % calculate similarity
-    Nij = (temp_delta * temp_delta.*(1-eye(Na))*(1-2*epsilon) + epsilon ).^eta;
-    sum_Nij = sum(Nij'*(1-2*epsilon) + epsilon)';
+    Nij = (temp_delta * temp_delta.*(1-eye(Na))).^eta;
+    sum_Nij = sum(Nij,2)';
     sij = Nij ./ sum_Nij;
 
     for j = 1:Na 

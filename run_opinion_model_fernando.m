@@ -1,5 +1,6 @@
+close all
 %% set parameters
-maxt = 500;
+maxt = 1000;
 Na = 300;
 W1 = 0.01;
 W2 = 1;
@@ -7,8 +8,9 @@ u = 1;
 tau = 1; % timescale separation parameter
 d = 1.5*ones(Na,1); % attention span/decay of belief
 b = 0*ones(Na,1); % exogeneous forcing/influences
-alpha = 0.01*ones(Na,1); % strength of self-reinforcement
-sigma = 0.0; % noise parameter
+alpha = 0.99*ones(Na,1); % strength of self-reinforcement
+sigma = 0.2; % noise parameter for opinion dynamics
+sigma_ND = 0.5; % noise parameter for network dynamics
 x0 = 2*randn(Na,1);
 eta = 4;
 gamma = 0.5;
@@ -17,14 +19,14 @@ gamma = 0.5;
 delta0 = full(adjacency(WattsStrogatz(Na,7,1))); % build a random small-world network for initial step.
 %% Run the model
 % [x,deltas] = opi_dyn(maxt,Na,W1,W2,u,tau,d,b,alpha,x0,delta0,sigma);
-[x,deltas] = opi_dyn_fernando(maxt,Na,x0,gamma,eta,sigma,W1,u,b,alpha,delta0);
+[x,deltas] = opi_dyn_fernando(maxt,Na,x0,gamma,eta,sigma,sigma_ND,W1,u,b,alpha,delta0);
 
 %% Plot outputs
 figure;
 plot(x','LineWidth',2);
 colormap jet; % colormap not working
 
-% ylim([-2 2]);
+ylim([-2 2]);
 
 %legend;
 
@@ -53,14 +55,21 @@ histogram(sum(cell2mat(deltas(end))));
 title('Final Degree Distribution');
 
 %% unpack delta cell structure, comment out for speed
-edges = 0:75; % need to adjust manually
-degree_dist = zeros(length(edges)-1,maxt+1);
+edges1 = 0:75; % need to adjust manually
+edges2 = -2:0.01:2; % need to adjust manually
+degree_dist1 = zeros(length(edges1)-1,maxt+1);
+degree_dist2 = zeros(length(edges2)-1,maxt+1);
 for i = 1:(maxt+1)
-    h = histogram(sum(cell2mat(deltas(i))),edges,'Normalization','probability');
-    degree_dist(:,i) = h.Values';
+    h1 = histogram(sum(cell2mat(deltas(i))),edges1,'Normalization','probability');
+    degree_dist1(:,i) = h1.Values';
+    
+    h2 = histogram(x(:,i),edges2,'Normalization','probability');
+    degree_dist2(:,i) = h2.Values;
 end
+
+%%
 figure;
-imagesc(degree_dist);
+imagesc(degree_dist1);
 set(gca,'YDir','normal')
 colormap(jetwhite);
 colorbar;
@@ -68,5 +77,14 @@ caxis([0 1]);
 xlabel('Time');
 ylabel('Edges');
 
+%%
+figure;
+imagesc(degree_dist2);
+set(gca,'YDir','normal')
+set(gca,'ytickLabel',compose('%d',round(edges2(yticks))));
+colormap(jetwhite);
+colorbar;
+xlabel('Time');
+ylabel('Opinion Space');
 
 
