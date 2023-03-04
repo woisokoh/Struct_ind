@@ -8,9 +8,9 @@ u = 1;
 tau = 1; % timescale separation parameter
 d = 1.5*ones(Na,1); % attention span/decay of belief
 b = 0*ones(Na,1); % exogeneous forcing/influences
-alpha = 0.99*ones(Na,1); % strength of self-reinforcement
-sigma = 0.2; % noise parameter for opinion dynamics
-sigma_ND = 0.5; % noise parameter for network dynamics
+alpha = 0.2*ones(Na,1); % strength of self-reinforcement
+sigma = 0.05; % noise parameter for opinion dynamics
+sigma_ND = 0.05; % noise parameter for network dynamics
 x0 = 2*randn(Na,1);
 eta = 4;
 gamma = 0.5;
@@ -68,23 +68,24 @@ for i = 1:(maxt+1)
 end
 
 %%
-figure;
-imagesc(degree_dist1);
-set(gca,'YDir','normal')
-colormap(jetwhite);
-colorbar;
-caxis([0 1]);
-xlabel('Time');
-ylabel('Edges');
+% figure;
+% imagesc(degree_dist1);
+% set(gca,'YDir','normal')
+% colormap(jetwhite);
+% colorbar;
+% caxis([0 1]);
+% xlabel('Time');
+% ylabel('Edges');
 
 %%
-figure;
-imagesc(degree_dist2);
-set(gca,'YDir','normal')
-set(gca,'ytickLabel',compose('%d',round(edges2(yticks))));
-colormap(jetwhite);
-colorbar;
-xlabel('Time');
-ylabel('Opinion Space');
+% figure;
+% imagesc(degree_dist2);
+% set(gca,'YDir','normal')
+% set(gca,'ytickLabel',compose('%d',round(edges2(yticks))));
+% colormap(jetwhite);
+% colorbar;
+% xlabel('Time');
+% ylabel('Opinion Space');
 
-
+%%
+slide_plot2

@@ -12,8 +12,8 @@ for t=1:maxt
     
     epsilon = sigma_ND*rand();
     % calculate similarity
-    Nij = (temp_delta * temp_delta.*(1-eye(Na))*(1-2*epsilon) + epsilon ).^eta;
-    sum_Nij = sum(Nij'*(1-2*epsilon) + epsilon)';
+    Nij = (temp_delta * temp_delta.*(1-eye(Na))*(sigma_ND-2*epsilon) + epsilon ).^eta;
+    sum_Nij = sum(Nij'*(sigma_ND-2*epsilon) + epsilon)';
     sij = Nij ./ sum_Nij;
 
     for j = 1:Na 
