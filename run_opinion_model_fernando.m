@@ -104,3 +104,13 @@ end
 plot([0:maxt]',moran_out)
 xlabel('time')
 ylabel('Moran''s I')
+
+%%
+figure;
+trans_out = zeros(maxt+1,1);
+for i =1:maxt+1
+    trans_out(i,1) = clustCoeff(deltas{1,i});
+end
+plot([0:maxt]',trans_out)
+xlabel('time')
+ylabel('Transitivity')
