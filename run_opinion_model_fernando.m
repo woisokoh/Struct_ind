@@ -68,24 +68,29 @@ for i = 1:(maxt+1)
 end
 
 %%
-% figure;
-% imagesc(degree_dist1);
-% set(gca,'YDir','normal')
-% colormap(jetwhite);
-% colorbar;
-% caxis([0 1]);
-% xlabel('Time');
-% ylabel('Edges');
+figure;
+imagesc(degree_dist1);
+set(gca,'YDir','normal')
+colormap(jet);
+colorbar;
+caxis([0 1]);
+xlabel('Time');
+ylabel('Edges');
 
 %%
-% figure;
-% imagesc(degree_dist2);
-% set(gca,'YDir','normal')
-% set(gca,'ytickLabel',compose('%d',round(edges2(yticks))));
-% colormap(jetwhite);
-% colorbar;
-% xlabel('Time');
-% ylabel('Opinion Space');
+figure;
+imagesc(degree_dist2);
+set(gca,'YDir','normal')
+set(gca,'ytickLabel',compose('%d',round(edges2(yticks))));
+colormap(jet);
+colorbar;
+xlabel('Time');
+ylabel('Opinion Space');
 
 %%
+global max_t x_t deltas_t
+max_t = maxt;
+x_t = x;
+deltas_t = deltas;
+
 slide_plot2

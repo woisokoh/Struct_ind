@@ -54,7 +54,7 @@ function slide_plot2_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for slide_plot2
 handles.output = hObject;
-global max_t x_t deltas_t
+% global maxt x deltas
 set(handles.slider1,'Max',max_t);
 set(handles.slider1,'Value',0);
 network_plot(handles);
@@ -101,10 +101,10 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 function network_plot(handles)
-global max_t x_t deltas_t
+% global maxt x deltas
 time = round(get(handles.slider1,'Value'))+1;
 tx = num2str(time-1);
-set(handles.edit1,'String',tx);
+set(handles.edit1,'String',time);
 ax1 = findobj(gcf,'Tag','axes1');
 axes(ax1)
 g = graph(deltas_t{time});
