@@ -94,3 +94,13 @@ x_t = x;
 deltas_t = deltas;
 
 slide_plot2
+
+%%
+figure;
+moran_out = zeros(maxt+1,1);
+for i =1:maxt+1
+    moran_out(i,1) = morans_i(x(:,i),deltas{1,i});
+end
+plot([0:maxt]',moran_out)
+xlabel('time')
+ylabel('Moran''s I')
