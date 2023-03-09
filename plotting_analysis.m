@@ -1,41 +1,17 @@
-close all
-%% set parameters
-maxt = 1000;
-Na = 300;
-W1 = 0.01;
-W2 = 1;
-u = 1;
-tau = 1; % timescale separation parameter
-d = 1.5*ones(Na,1); % attention span/decay of belief
-b = 0*ones(Na,1); % exogeneous forcing/influences
-alpha = 0.2*ones(Na,1); % strength of self-reinforcement
-sigma = 0.05; % noise parameter for opinion dynamics
-sigma_ND = 0.05; % noise parameter for network dynamics
-x0 = 2*randn(Na,1);
-eta = 4;
-gamma = 0.5;
-% tempDelta = randn(Na,Na);
-% delta0 =  tempDelta.*(ones(Na) - eye(Na));%0.05*(ones(Na,Na) - eye(Na));% - [0,0,0;0,0,0;0,0,0];zeros(Na,Na);
-delta0 = full(adjacency(WattsStrogatz(Na,7,1))); % build a random small-world network for initial step.
-%% Run the model
-% [x,deltas] = opi_dyn(maxt,Na,W1,W2,u,tau,d,b,alpha,x0,delta0,sigma);
-tic;
-[x,deltas] = opi_dyn_fernando(maxt,Na,x0,gamma,eta,sigma,sigma_ND,W1,u,b,alpha,delta0);
-toc;
-%% Plot outputs
-%% network plots/degree distribution calculations
-edges1 = 0:75; % need to adjust manually
-edges2 = -1.7:0.01:1.7; % need to adjust manually
+function plotting_analysis(x,deltas,delta0,edges1,edges2)
 
-figure;
+maxt = length(deltas)-1;
+
+figure_setups;
 subplot(2,2,1), imagesc(cell2mat(deltas(1)));
 colorbar;
 title('Connectivity IC');
 colorbar off;
 
+
 subplot(2,2,2), imagesc(cell2mat(deltas(end)));
 colorbar;
-title('Connectivity Final State');
+title('Final Connectivity');
 
 subplot(2,2,3), histogram(sum(cell2mat(deltas(1))),edges1,'Normalization','probability');
 title('Initial Degree Distribution');
@@ -65,29 +41,30 @@ for i = 1:(maxt+1)
     temp_delta_old = temp_delta;
 end
 %%
-figure;
+figure_setups;
 subplot(2,2,1), plot(x','LineWidth',2);
 title('Opinion dynamics');
 ylim([-2 2]);
 xlabel('Time');
 ylabel('Opinion');
-grid on;
 axis tight;
+grid on;
+grid minor;
 %legend;
 
 subplot(2,2,2), plot(delta_changes);
 xlabel('Time');
 ylabel('Changes');
 title('Network changes');
-grid on;
 axis tight;
+grid on;
+grid minor;
 
 subplot(2,2,3), imagesc(degree_dist1);
 title('Degree distribution');
 set(gca,'YDir','normal')
 colormap jetwhite;
 colorbar;
-caxis([0 1]);
 xlabel('Time');
 ylabel('Edges');
 
@@ -110,39 +87,56 @@ deltas_t = deltas;
 slide_plot2
 
 %%
-figure;
+figure_setups;
 moran_out = zeros(maxt+1,1);
 for i =1:maxt+1
     moran_out(i,1) = morans_i(x(:,i),deltas{1,i});
 end
-subplot(2,2,1), plot(0:maxt,moran_out);
-axis tight;
-grid on;
+plot(0:maxt,moran_out);
 hold on;
-xlabel('Time')
-ylabel('Moran''s I')
+plot(0:maxt,movmean(moran_out,40),'-.r');
+%legend('Moran''s I','Smoothed Moran''s I','Location','Southeast');
+axis tight;
+hold on;
+xlabel('Time');
+title('Moran''s I');
+grid on;
+grid minor;
 
+figure_setups;
 trans_out = zeros(maxt+1,1);
 for i =1:maxt+1
     trans_out(i,1) = clustCoeff(deltas{1,i});
 end
-subplot(2,2,2), plot(0:maxt,trans_out);
+plot(0:maxt,trans_out);
+hold on;
+plot(0:maxt,movmean(trans_out,40),'-.r');
+hold on;
 axis tight;
+xlabel('Time');
+title('Transitivity');
 grid on;
-xlabel('Time')
-ylabel('Transitivity')
+grid minor;
 
-subplot(2,2,3), plot(0:maxt,movmean(moran_out,40));;
-title('Smoothed Moran''s I');
-axis tight;
-grid on;
-xlabel('time');
-
-subplot(2,2,4), plot(0:maxt,std(x));
+figure_setups;
+temp_plot_std = std(x);
+plot(0:maxt,temp_plot_std);
+hold on;
+plot(0:maxt,movmean(temp_plot_std,40),'-.r');
 title('Opinion Stdev');
 axis tight;
-grid on;
 xlabel('time');
-ylabel('Stdev');
+grid on;
+grid minor;
 
+% figure_setups;
+% temp_plot_std = std(x);
+% plot(0:maxt,temp_plot_std);
+% hold on;
+% plot(0:maxt,movmean(temp_plot_std,40),'-.r');
+% title('Lag-1 Autocorrelation');
+% axis tight;
+% grid on;
+% xlabel('time');
 
+end
